@@ -66,10 +66,10 @@ export default function MenuBar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
           <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
             <rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="white" strokeOpacity="0.9"/>
-            <rect x="2" y="2" width="17" height="8" rx="1.5" fill="white" fillOpacity="0.9"/>
+            <rect x="2" y="2" width="13" height="8" rx="1.5" fill="white" fillOpacity="0.9"/>
             <path d="M23 4v4a2 2 0 0 0 0-4z" fill="white" fillOpacity="0.9"/>
           </svg>
-          <span style={{ fontSize: '12px', opacity: 0.9 }}>100%</span>
+          <span style={{ fontSize: '12px', opacity: 0.9 }}>72%</span>
         </div>
 
         {/* Clock */}

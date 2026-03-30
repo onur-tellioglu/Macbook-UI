@@ -1,20 +1,20 @@
 import React from 'react';
+import { Icons } from './AppIcons';
 
-// Real macOS Big Sur/Monterey icons from jim-nielsen's CDN
 const DOCK_APPS = [
-  { id: 'finder',    name: 'Finder',          icon: 'https://cdn.jim-nielsen.com/macos/512/finder-2021-09-08.png' },
-  { id: 'launchpad', name: 'Launchpad',        icon: 'https://cdn.jim-nielsen.com/macos/512/launchpad-2021-05-31.png' },
-  { id: 'safari',    name: 'Safari',           icon: 'https://cdn.jim-nielsen.com/macos/512/safari-2021-06-14.png' },
-  { id: 'messages',  name: 'Messages',         icon: 'https://cdn.jim-nielsen.com/macos/512/messages-2021-05-31.png' },
-  { id: 'mail',      name: 'Mail',             icon: 'https://cdn.jim-nielsen.com/macos/512/mail-2021-06-14.png' },
-  { id: 'maps',      name: 'Maps',             icon: 'https://cdn.jim-nielsen.com/macos/512/maps-2021-05-31.png' },
-  { id: 'photos',    name: 'Photos',           icon: 'https://cdn.jim-nielsen.com/macos/512/photos-2021-06-14.png' },
-  { id: 'camera',    name: 'Photo Booth',      icon: 'https://cdn.jim-nielsen.com/macos/512/photo-booth-2021-05-31.png' },
-  { id: 'appstore',  name: 'App Store',        icon: 'https://cdn.jim-nielsen.com/macos/512/app-store-2021-05-31.png' },
-  { id: 'settings',  name: 'System Settings',  icon: 'https://cdn.jim-nielsen.com/macos/512/system-preferences-2021-05-31.png' },
+  { id: 'finder',    name: 'Finder',           Icon: Icons.Finder },
+  { id: 'launchpad', name: 'Launchpad',         Icon: Icons.Launchpad },
+  { id: 'safari',    name: 'Safari',            Icon: Icons.Safari },
+  { id: 'messages',  name: 'Messages',          Icon: Icons.Messages },
+  { id: 'mail',      name: 'Mail',              Icon: Icons.Mail },
+  { id: 'maps',      name: 'Maps',              Icon: Icons.Maps },
+  { id: 'photos',    name: 'Photos',            Icon: Icons.Photos },
+  { id: 'camera',    name: 'Photo Booth',       Icon: Icons.PhotoBooth },
+  { id: 'appstore',  name: 'App Store',         Icon: Icons.AppStore },
+  { id: 'settings',  name: 'System Settings',   Icon: Icons.SystemSettings },
 ];
 
-export default function Dock({ onAppClick }) {
+export default function Dock({ onAppClick, openApps = [] }) {
   return (
     <div style={{
       position: 'absolute',
@@ -29,21 +29,21 @@ export default function Dock({ onAppClick }) {
         gap: '6px',
         padding: '8px 12px',
         borderRadius: '18px',
-        background: 'rgba(255,255,255,0.22)',
-        backdropFilter: 'blur(40px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-        border: '1px solid rgba(255,255,255,0.45)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4)',
+        background: 'rgba(255,255,255,0.2)',
+        backdropFilter: 'blur(40px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+        border: '1px solid rgba(255,255,255,0.4)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.45)',
       }}>
-        {DOCK_APPS.map((app, i) => (
-          <DockIcon key={app.id} app={app} onAppClick={onAppClick} />
+        {DOCK_APPS.map(app => (
+          <DockIcon key={app.id} app={app} isOpen={openApps.includes(app.id)} onAppClick={onAppClick} />
         ))}
       </div>
     </div>
   );
 }
 
-function DockIcon({ app, onAppClick }) {
+function DockIcon({ app, isOpen, onAppClick }) {
   const [hovered, setHovered] = React.useState(false);
 
   return (
@@ -52,14 +52,13 @@ function DockIcon({ app, onAppClick }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Tooltip */}
       {hovered && (
         <div style={{
           position: 'absolute',
-          bottom: '110%',
+          bottom: 'calc(100% + 10px)',
           left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(30,30,30,0.85)',
+          background: 'rgba(30,30,30,0.82)',
           backdropFilter: 'blur(10px)',
           color: '#fff',
           fontSize: '12px',
@@ -69,37 +68,43 @@ function DockIcon({ app, onAppClick }) {
           whiteSpace: 'nowrap',
           pointerEvents: 'none',
           boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          zIndex: 100,
+          border: '0.5px solid rgba(255,255,255,0.2)',
         }}>{app.name}</div>
       )}
 
-      <img
-        src={app.icon}
-        alt={app.name}
+      <div
         onClick={() => onAppClick(app.id)}
         style={{
-          width: hovered ? '64px' : '54px',
-          height: hovered ? '64px' : '54px',
-          transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
-          transition: 'all 0.15s ease',
+          width: hovered ? '62px' : '54px',
+          height: hovered ? '62px' : '54px',
+          transform: hovered ? 'translateY(-10px)' : 'translateY(0)',
+          transition: 'all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
           cursor: 'pointer',
-          borderRadius: '14px',
-          imageRendering: 'crisp-edges',
-          filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+          filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.4))',
         }}
-      />
+      >
+        <app.Icon />
+      </div>
 
       {/* Running dot */}
-      {app.id === 'finder' && (
+      {isOpen && (
         <div style={{
           position: 'absolute',
           bottom: '-6px',
-          width: '5px',
-          height: '5px',
+          width: '5px', height: '5px',
           borderRadius: '50%',
           background: 'rgba(255,255,255,0.9)',
           boxShadow: '0 0 4px rgba(255,255,255,0.6)',
+        }} />
+      )}
+      {/* Finder always running */}
+      {app.id === 'finder' && !isOpen && (
+        <div style={{
+          position: 'absolute',
+          bottom: '-6px',
+          width: '5px', height: '5px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.7)',
         }} />
       )}
     </div>
