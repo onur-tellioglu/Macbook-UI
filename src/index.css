@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@theme {
+  --color-mac-bg: rgb(240, 240, 240);
+  --color-mac-border: rgba(0,0,0,0.1);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  overflow: hidden;
+}
