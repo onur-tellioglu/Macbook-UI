@@ -12,10 +12,10 @@ const FolderIcon = ({ color = '#4A9CEA' }) => (
 
 export default function Desktop({ children }) {
   const [icons, setIcons] = useState([
-    {
-      id: '1', name: 'Macintosh HD', type: 'folder', color: '#888',
-      pos: { x: window.innerWidth - 100, y: 40 }
-    },
+    { id: '1', name: 'Macintosh HD', type: 'folder', color: '#888',    pos: { x: window.innerWidth - 100, y: 40 } },
+    { id: '2', name: 'mezuniyet',   type: 'folder', color: '#4A9CEA', pos: { x: window.innerWidth - 100, y: 130 } },
+    { id: '3', name: 'resmi',       type: 'folder', color: '#4A9CEA', pos: { x: window.innerWidth - 100, y: 220 } },
+    { id: '4', name: 'ödevler',     type: 'folder', color: '#4A9CEA', pos: { x: window.innerWidth - 100, y: 310 } },
   ]);
   const [contextMenu, setContextMenu] = useState(null);
   const [editingId, setEditingId] = useState(null);

@@ -2,16 +2,9 @@ import React from 'react';
 import { Icons } from './AppIcons';
 
 const DOCK_APPS = [
-  { id: 'finder',    name: 'Finder',           Icon: Icons.Finder },
-  { id: 'launchpad', name: 'Launchpad',         Icon: Icons.Launchpad },
-  { id: 'safari',    name: 'Safari',            Icon: Icons.Safari },
-  { id: 'messages',  name: 'Messages',          Icon: Icons.Messages },
-  { id: 'mail',      name: 'Mail',              Icon: Icons.Mail },
-  { id: 'maps',      name: 'Maps',              Icon: Icons.Maps },
-  { id: 'photos',    name: 'Photos',            Icon: Icons.Photos },
-  { id: 'camera',    name: 'Photo Booth',       Icon: Icons.PhotoBooth },
-  { id: 'appstore',  name: 'App Store',         Icon: Icons.AppStore },
-  { id: 'settings',  name: 'System Settings',   Icon: Icons.SystemSettings },
+  { id: 'safari',   name: 'Safari',      Icon: Icons.Safari },
+  { id: 'messages', name: 'Messages',    Icon: Icons.Messages },
+  { id: 'camera',   name: 'Photo Booth', Icon: Icons.PhotoBooth },
 ];
 
 export default function Dock({ onAppClick, openApps = [] }) {
