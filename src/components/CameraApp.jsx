@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function CameraApp() {
+export default function CameraApp({ width = 640, height = 452 }) {
   const videoRef = useRef(null);
-  const [stream, setStream] = useState(null);
+  const streamRef = useRef(null);
   const [photo, setPhoto] = useState(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     async function setupCamera() {
@@ -12,82 +13,123 @@ export default function CameraApp() {
         if (videoRef.current) {
           videoRef.current.srcObject = mediaStream;
         }
-        setStream(mediaStream);
+        streamRef.current = mediaStream;
+        setReady(true);
       } catch (err) {
-        console.error("Camera error:", err);
+        console.error('Camera error:', err);
       }
     }
     setupCamera();
-
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
     };
-  }, []); 
+  }, []);
 
   const takePhoto = () => {
-    if (videoRef.current) {
-      const canvas = document.createElement('canvas');
-      canvas.width = videoRef.current.videoWidth || 640;
-      canvas.height = videoRef.current.videoHeight || 480;
-      const ctx = canvas.getContext('2d');
-      // Flip the context horizontally to match the mirrored video
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-      ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      setPhoto(canvas.toDataURL('image/png'));
-    }
+    if (!videoRef.current) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth || 1280;
+    canvas.height = videoRef.current.videoHeight || 720;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(videoRef.current, 0, 0);
+    setPhoto(canvas.toDataURL('image/png'));
   };
 
   const savePhoto = () => {
-    if (photo) {
-      const a = document.createElement('a');
-      a.href = photo;
-      a.download = `Photo on Macbook ${new Date().getTime()}.png`;
-      a.click();
-    }
+    if (!photo) return;
+    const a = document.createElement('a');
+    a.href = photo;
+    a.download = `MacBook Photo ${new Date().toLocaleString('tr-TR').replace(/[/:]/g,'-')}.png`;
+    a.click();
   };
 
   return (
-    <div className="w-[640px] h-[480px] bg-black flex flex-col relative rounded-b-xl overflow-hidden shadow-inner">
+    <div style={{ width, height, background: '#000', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       {!photo && (
-        <video 
-          ref={videoRef} 
-          autoPlay 
-          playsInline 
-          className="w-full h-full object-cover scale-x-[-1]" 
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }}
         />
       )}
+
       {photo && (
-        <div className="relative w-full h-full bg-[#f0f0f0] flex items-center justify-center p-8">
-          <div className="bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.2)] pb-12 rotate-2 transition-transform hover:rotate-0">
-            <img src={photo} alt="Captured" className="w-[480px] h-auto border border-gray-200" />
-          </div>
-          <button 
-            onClick={() => setPhoto(null)} 
-            className="absolute top-4 left-4 bg-white/80 hover:bg-white text-gray-800 px-3 py-1.5 rounded-md text-xs font-semibold shadow transition"
-          >
-            Geri Dön
-          </button>
-          <button 
+        <div style={{
+          width: '100%', height: '100%',
+          background: '#1a1a1a',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+        }}>
+          <img
+            src={photo}
+            alt="Captured"
+            style={{
+              maxWidth: '92%', maxHeight: '88%',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+              border: '2px solid rgba(255,255,255,0.08)',
+              borderRadius: '2px',
+            }}
+          />
+          <button
+            onClick={() => setPhoto(null)}
+            style={{
+              position: 'absolute', top: '12px', left: '12px',
+              background: 'rgba(255,255,255,0.15)', color: 'white',
+              border: '0.5px solid rgba(255,255,255,0.25)',
+              padding: '5px 14px', borderRadius: '6px',
+              fontSize: '12px', fontWeight: 500, cursor: 'pointer',
+              backdropFilter: 'blur(10px)',
+            }}
+          >← Geri Dön</button>
+          <button
             onClick={savePhoto}
-            className="absolute top-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm font-semibold shadow transition"
+            style={{
+              position: 'absolute', top: '12px', right: '12px',
+              background: '#0A84FF', color: 'white',
+              border: 'none',
+              padding: '5px 16px', borderRadius: '6px',
+              fontSize: '13px', fontWeight: 600, cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(10,132,255,0.5)',
+            }}
+          >↓ İndir</button>
+        </div>
+      )}
+
+      {/* Camera button */}
+      {!photo && (
+        <div style={{
+          position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
+        }}>
+          {/* Red record ring button */}
+          <button
+            onClick={takePhoto}
+            style={{
+              width: '60px', height: '60px', borderRadius: '50%',
+              border: '3px solid white',
+              background: 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', outline: 'none',
+              boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.5)',
+              transition: 'transform 0.1s',
+            }}
+            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.93)'}
+            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
           >
-            Masaüstüne Kaydet
+            <div style={{ width: '46px', height: '46px', borderRadius: '50%', background: '#FF3B30' }} />
           </button>
         </div>
       )}
 
-      {!photo && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 p-2 bg-black/20 rounded-full backdrop-blur-sm">
-          <button 
-            onClick={takePhoto}
-            className="w-14 h-14 rounded-full border-[3px] border-white flex items-center justify-center active:scale-95 transition-all outline-none"
-          >
-            <div className="w-[46px] h-[46px] bg-[#ff5f56] rounded-full"></div>
-          </button>
-        </div>
+      {/* Timer / no camera warning */}
+      {!ready && !photo && (
+        <div style={{
+          position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'rgba(255,255,255,0.5)', fontSize: '14px',
+        }}>Kamera bağlanıyor...</div>
       )}
     </div>
   );
