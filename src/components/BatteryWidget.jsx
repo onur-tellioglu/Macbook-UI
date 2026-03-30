@@ -34,7 +34,7 @@ const AirPodSVG = () => (
 );
 
 export default function BatteryWidget() {
-  const macPct = 84;
+  const macPct = 72;
   const devices = [
     { label: 'AirPods L', pct: Math.floor(Math.random() * 30 + 60) },
     { label: 'AirPods R', pct: Math.floor(Math.random() * 30 + 60) },
