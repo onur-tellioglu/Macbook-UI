@@ -10,63 +10,72 @@ export default function App() {
 
   const handleAppClick = (appId) => {
     if (!openApps.includes(appId)) {
-      setOpenApps([...openApps, appId]);
+      setOpenApps(prev => [...prev, appId]);
     }
   };
 
   const closeApp = (appId) => {
-    setOpenApps(openApps.filter(id => id !== appId));
+    setOpenApps(prev => prev.filter(id => id !== appId));
   };
 
   return (
     <div style={{
       position: 'fixed',
-      top: 0, left: 0,
+      inset: 0,
       width: '100vw',
       height: '100vh',
       overflow: 'hidden',
       userSelect: 'none',
-      background: 'linear-gradient(135deg, #1a3a6e 0%, #2a5298 20%, #1e3c72 40%, #4a90d9 60%, #89c4f4 80%, #c2e0ff 100%)',
+      /* macOS Ventura / Sonoma style warm dusk gradient */
+      background: `
+        radial-gradient(ellipse at 20% 50%, #5c3b8a 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, #1a4a8a 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, #8a3b5c 0%, transparent 50%),
+        linear-gradient(135deg, #1a2a4a 0%, #2d3a6b 25%, #4a2060 50%, #1a3a6e 75%, #0d1b3e 100%)
+      `,
     }}>
-      {/* Decorative gradient blobs for macOS Monterey feel */}
-      <div style={{
-        position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none'
-      }}>
+      {/* Decorative light rays */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{
-          position: 'absolute', top: '-10%', left: '-5%',
-          width: '60%', height: '70%',
+          position: 'absolute', top: '5%', left: '15%',
+          width: '600px', height: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(100,180,255,0.35) 0%, transparent 70%)',
-          filter: 'blur(40px)',
+          background: 'radial-gradient(ellipse, rgba(120,160,255,0.25) 0%, transparent 65%)',
+          filter: 'blur(20px)',
         }} />
         <div style={{
-          position: 'absolute', bottom: '-10%', right: '-5%',
-          width: '50%', height: '60%',
+          position: 'absolute', bottom: '10%', right: '10%',
+          width: '500px', height: '400px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(60,130,255,0.3) 0%, transparent 70%)',
-          filter: 'blur(40px)',
+          background: 'radial-gradient(ellipse, rgba(200,100,180,0.2) 0%, transparent 65%)',
+          filter: 'blur(25px)',
         }} />
         <div style={{
-          position: 'absolute', top: '30%', right: '10%',
-          width: '30%', height: '40%',
+          position: 'absolute', top: '40%', right: '25%',
+          width: '350px', height: '350px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(150,220,255,0.2) 0%, transparent 70%)',
-          filter: 'blur(30px)',
+          background: 'radial-gradient(ellipse, rgba(80,130,255,0.18) 0%, transparent 70%)',
+          filter: 'blur(15px)',
         }} />
       </div>
 
       <MenuBar />
+
       <Desktop>
         {openApps.includes('camera') && (
           <Window
             title="Photo Booth"
             onClose={() => closeApp('camera')}
-            defaultPos={{ x: Math.max(0, window.innerWidth / 2 - 320), y: Math.max(24, window.innerHeight / 2 - 260) }}
+            defaultPos={{
+              x: Math.max(0, window.innerWidth / 2 - 320),
+              y: Math.max(30, window.innerHeight / 2 - 260)
+            }}
           >
             <CameraApp />
           </Window>
         )}
       </Desktop>
+
       <Dock onAppClick={handleAppClick} />
     </div>
   );
